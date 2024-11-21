@@ -9,22 +9,24 @@ export const sendEmail = async({email, emailType, userId}:any) => {
         const hashedToken = await bcryptjs.hash(userId.toString(), 10)
 
         if (emailType === "VERIFY") {
-            await User.findByIdAndUpdate(userId, 
-                {verifyToken: hashedToken, verifyTokenExpiry: Date.now() + 3600000})
+            await User.findByIdAndUpdate(userId, {
+                $set: 
+                {verifyToken: hashedToken, verifyTokenExpiry: Date.now() + 3600000}
+            })
         } else if (emailType === "RESET"){
             await User.findByIdAndUpdate(userId, 
                 {forgotPasswordToken: hashedToken, forgotPasswordTokenExpiry: Date.now() + 3600000})
         }
 
-        const TOKEN = "********6ed2";
+        // const TOKEN = "********6ed2";
         const transport = nodemailer.createTransport({
-            host: "sandbox.smtp.mailtrap.io",
-            port: 2525,
-            auth: {
-                token: TOKEN,
-                testInboxId: 3248914,
-              //TODO: add these credentials to .env file
+            host: "sandbox.smtp.mailtrap.io", 
+            port: 2525, 
+            auth: { 
+                user: "d5374b5b362f61", 
+                pass: "18f1e9987da011" 
             }
+            
           });
 
 
